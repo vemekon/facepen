@@ -6,10 +6,12 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router";
+import { Cancel } from "@material-ui/icons";
 
 export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState({});
+  const [file, setFile] = useState(null);
   const username = useParams().username;
 
   useEffect(() => {
@@ -20,7 +22,37 @@ export default function Profile() {
     fetchUser();
   }, [username]);
 
-  const p = () => <div>hello dude</div>;
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setFile(e.target.files[0]);
+
+    if (file) {
+      const data = new FormData();
+      const fileName = Date.now() + file.name;
+      data.append("name", fileName);
+      data.append("file", file);
+      data.append("upload_preset", "mekele");
+      //data.append("cloud_name", "mekele");
+
+      // console.log(newPost);
+      try {
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/mekele/image/upload",
+          data
+        );
+        console.log(response.data.public_id, "cloudinary");
+        const profilePicId = response.data.public_id;
+
+        try {
+          await axios.post("/posts", profilePicId);
+          window.location.reload();
+        } catch (err) {}
+      } catch (err) {}
+      // try {
+      //   await axios.post("/upload", data);
+      // } catch (err) {}
+    }
+  };
 
   const profileImage = () => {
     return (
@@ -42,6 +74,13 @@ export default function Profile() {
               : PF + "person/noAvatar.png"
           }
           alt=""
+        />
+        <input
+          className="inputProfilePic"
+          type="file"
+          id="file"
+          accept=".png,.jpeg,.jpg"
+          onChange={(e) => submitHandler(e)}
         />
       </>
     );

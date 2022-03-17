@@ -25,6 +25,17 @@ router.put("/:id", async (req, res) => {
     return res.status(403).json("You can update only your account!");
   }
 });
+//update user/profile pic
+router.put("/update/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      $set: req.body,
+    });
+    res.status(200).json("Account has been updated");
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
 
 //delete user
 router.delete("/:id", async (req, res) => {
@@ -69,7 +80,7 @@ router.get("/friends/:userId", async (req, res) => {
       const { _id, username, profilePicture } = friend;
       friendList.push({ _id, username, profilePicture });
     });
-    res.status(200).json(friendList)
+    res.status(200).json(friendList);
   } catch (err) {
     res.status(500).json(err);
   }

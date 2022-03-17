@@ -48,3 +48,36 @@
 .profileRightBottom{
     display: flex;
 }
+.inputProfilePic::-webkit-file-upload-button {
+    visibility: hidden;
+    
+  }
+
+  .inputProfilePic::before {
+    content: '\221a';
+    display: inline-block;
+    
+    border: 1px solid #999;
+    border-radius: 3px;
+    
+    outline: none;
+    white-space: nowrap;
+    
+    left: 53%;
+    right: 0;
+    width:10px;
+    top: 150px;
+   
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+    position: absolute;
+
+  }
+  .inputProfilePic:hover::before {
+    border-color: black;
+  }
+  .inputProfilePic:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+  }
